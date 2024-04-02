@@ -1,0 +1,22 @@
+<p>f1-selector works!</p>
+<button (click)="f1Service.updateSeasons()">UpdateSeason</button>
+
+<button (click)="f1Service.updateRaces('2015')">Update Races</button>
+
+<ul>
+
+    @for (season of seasons; track season) {
+        <li>{{ season }}</li>
+    }
+
+</ul>
+
+
+
+<ul>
+
+    @for (race of races; track race) {
+        <li>{{ race }}</li>
+    }
+
+</ul>
