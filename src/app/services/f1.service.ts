@@ -213,11 +213,11 @@ export class F1Service {
         this.updateSeasons();
 
 
-        this.selectSeason('2022');
-        this.races$.subscribe((value) => {
-            console.log('This sub ran')
-            this.selectRace('2022', 1);
-        })
+        // this.selectSeason('2022');
+        // this.races$.subscribe((value) => {
+        //     console.log('This sub ran')
+        //     this.selectRace('2022', 1);
+        // })
     }
 
 
