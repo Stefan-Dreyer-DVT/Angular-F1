@@ -1,0 +1,19 @@
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+
+  img {
+    min-width: 50%;
+  }
+
+  a {
+
+  }
+
+  p {
+    padding: 1rem;
+  }
+}

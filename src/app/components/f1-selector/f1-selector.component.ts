@@ -1,44 +1,40 @@
-gimport {Component, inject} from '@angular/core';
-import {F1Service, Race} from '../../services/f1.service';
-import {Subscription} from 'rxjs';
+import {Component, Inject, inject} from '@angular/core';
+import {F1Service} from '../../services/f1.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
+import {WikiService} from '../../services/wiki.service';
 
 @Component({
     selector: 'app-f1-selector',
     standalone: true,
-    imports: [],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe
+    ],
     templateUrl: './f1-selector.component.html',
     styleUrl: './f1-selector.component.scss'
 })
 export class F1SelectorComponent {
 
+    selectedSeason = '';
+    selectedRace = 0;
+
     f1Service = inject(F1Service);
-    onSeasonUpdateSub: Subscription | undefined;
-    onRaceUpdateSub: Subscription | undefined;
 
-    seasons: string[] = [];
-    races: string[] = [];
+    wikiService = Inject(WikiService);
 
-    onSeasonUpdate = (seasons: string[]) => {
-        console.log('Subbed Function executed')
-        this.seasons = seasons;
-    }
 
-    onRaceUpdate = (races: Race[]) => {
-        console.log('Subbed Function executed')
-        this.races = races.map(race => race.round);
-
+    log(string : any){
+        console.log(string);
     }
 
     ngOnInit() {
         console.log('init')
-        this.onSeasonUpdateSub = this.f1Service.seasons$.subscribe(this.onSeasonUpdate);
-        this.onRaceUpdateSub = this.f1Service.races$.subscribe(this.onRaceUpdate);
     }
 
     ngOnDestroy() {
         console.log('destroy')
-        this.onSeasonUpdateSub?.unsubscribe();
-        this.onRaceUpdateSub?.unsubscribe();
     }
 
 }

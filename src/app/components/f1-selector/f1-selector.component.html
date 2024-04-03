@@ -1,22 +1,25 @@
-<p>f1-selector works!</p>
-<button (click)="f1Service.updateSeasons()">UpdateSeason</button>
+<div class="selector-form">
 
-<button (click)="f1Service.updateRaces('2015')">Update Races</button>
+    <div>
+        <label>Season:</label>
+        <select [(ngModel)]="selectedSeason" (change)="f1Service.selectSeason(selectedSeason)">
+            @for (season of f1Service.seasons$ | async; track season) {
+                <option value="{{season.season}}">{{ season.season }}</option>
+            }
+        </select>
+    </div>
 
-<ul>
+    <div>
 
-    @for (season of seasons; track season) {
-        <li>{{ season }}</li>
-    }
+        <label>Race:</label>
+        @if(selectedSeason){
 
-</ul>
+            <select [(ngModel)]="selectedRace" (change)="f1Service.selectRace(selectedSeason,selectedRace)">
+                @for (race of f1Service.races$ | async; track race.round) {
+                    <option value="{{race.round}}">{{ race.raceName }}</option>
+                }
+            </select>
+        }
+    </div>
 
-
-
-<ul>
-
-    @for (race of races; track race) {
-        <li>{{ race }}</li>
-    }
-
-</ul>
+</div>

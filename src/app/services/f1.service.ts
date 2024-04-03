@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {retry, Subject, take} from 'rxjs';
+import {BehaviorSubject, retry, take} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
-export interface SeasonResponse {
+export interface apiResponse {
     MRData: Mrdata
 }
 
@@ -111,35 +111,69 @@ export interface AverageSpeed {
     speed: string
 }
 
+
+export interface RaceDTO {
+
+}
+
+
+
+
 @Injectable({
     providedIn: 'root'
 })
 export class F1Service {
 
-    seasons$ = new Subject<string[]>();
-    seasons : Season[] = [];
 
-    updateSeasons() {
-        this.http.get<SeasonResponse>('https://ergast.com/api/f1/seasons.json')
+    season: string = '';
+    seasons$ = new BehaviorSubject<Season[]>([]);
+
+    race: string = '';
+    races$ = new BehaviorSubject<Race[]>([]);
+
+    topResult: Driver | undefined;
+    results$ = new BehaviorSubject<Result[]>([]);
+    resultSub = this.results$.subscribe((results) => {
+        if(results.length > 0){
+            this.topResult = results[0].Driver;
+        }
+    })
+
+    selectSeason(season: string) {
+        this.updateRaces(season);
+        this.season = season;
+
+        this.results$.next([]);
+        this.race = '';
+    }
+
+    selectRace(season: string, race: number) {
+        if (this.races$.getValue().length > 0) {
+            this.updateResults(season, race);
+            this.race = this.races$.getValue()[race - 1].raceName;
+        }
+    }
+
+
+    private updateSeasons() {
+        this.http.get<apiResponse>('https://ergast.com/api/f1/seasons.json?limit=100')
             .pipe(
                 retry(2),
                 take(1)
             )
             .subscribe(response => {
-                const seasons = response.MRData.SeasonTable?.Seasons.map(season => season.season)
+                const seasons = response.MRData.SeasonTable?.Seasons;
                 if(seasons){
                     this.seasons$.next(seasons);
                 }
                 else{
-                    console.error("UpdateSeasons DID NIT HAVE SeasonTable...")
+                    console.error('UpdateSeasons DID NOT HAVE SeasonTable...')
                 }
             })
     }
 
-    races$ = new Subject<Race[]>();
-
-    updateRaces(season: string) {
-        this.http.get<SeasonResponse>(`https://ergast.com/api/f1/${season}.json`)
+    private updateRaces(season: string) {
+        this.http.get<apiResponse>(`https://ergast.com/api/f1/${season}.json`)
             .pipe(
                 retry(2),
                 take(1)
@@ -148,27 +182,43 @@ export class F1Service {
                 const raceDetails = response.MRData.RaceTable?.Races
                 if(raceDetails){
                     this.races$.next(raceDetails);
+
+                } else {
+                    console.error('Response did not have a RaceTable')
                 }
             })
     }
 
-    results$ =new Subject<Result[]>();
-
-    updateResults(season: string, round:string){
-        this.http.get<SeasonResponse>(`https://ergast.com/api/f1/${season}/${round}/results.json`)
+    private updateResults(season: string, round: number) {
+        this.http.get<apiResponse>(`https://ergast.com/api/f1/${season}/${round}/results.json`)
             .pipe(
                 retry(2),
                 take(1)
             )
             .subscribe(response =>{
-                const raceResult = response.MRData.RaceTable?.Races[0]?.Results;
-                if(raceResult){
-                    this.results$.next(raceResult);
+                if (response.MRData.RaceTable) {
+                    const raceResult = response.MRData.RaceTable.Races[0]?.Results;
+                    if (raceResult) {
+                        this.results$.next(raceResult);
+                    } else {
+                        console.error('Specific Race index did not exist');
+                    }
+                } else {
+                    console.error('Response did not have a RaceTable');
                 }
             })
     }
 
     constructor(private http: HttpClient) {
+        this.updateSeasons();
 
+
+        this.selectSeason('2022');
+        this.races$.subscribe((value) => {
+            console.log('This sub ran')
+            this.selectRace('2022', 1);
+        })
     }
+
+
 }
