@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {F1Service} from '../../services/f1.service';
-import {WikiService} from '../../services/wiki.service';
 import {AsyncPipe} from '@angular/common';
+import {WikiService} from '../../../services/wiki/wiki.service';
+import {F1Service} from '../../../services/f1/f1.service';
 
 @Component({
   selector: 'app-f1-details',

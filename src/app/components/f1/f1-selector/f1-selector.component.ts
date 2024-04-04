@@ -1,8 +1,7 @@
-import {Component, Inject, inject} from '@angular/core';
-import {F1Service} from '../../services/f1.service';
+import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe} from '@angular/common';
-import {WikiService} from '../../services/wiki.service';
+import {F1Service} from '../../../services/f1/f1.service';
 
 @Component({
     selector: 'app-f1-selector',
@@ -20,21 +19,8 @@ export class F1SelectorComponent {
     selectedSeason = '';
     selectedRace = 0;
 
-    f1Service = inject(F1Service);
 
-    wikiService = Inject(WikiService);
-
-
-    log(string : any){
-        console.log(string);
-    }
-
-    ngOnInit() {
-        console.log('init')
-    }
-
-    ngOnDestroy() {
-        console.log('destroy')
+    constructor(protected f1Service: F1Service) {
     }
 
 }

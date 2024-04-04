@@ -1,0 +1,17 @@
+<div>
+    @if (f1Service.results$|async; as results) {
+        @if (results.length > 0) {
+            <img [src]="wikiService.image$ | async" alt="">
+            <a [href]="(results[0].Driver.url)">Wiki page link</a>
+        }
+    }
+    @if (isExpanded) {
+
+        <p>{{ wikiService.description$ | async }}</p>
+    } @else {
+        <p>{{ truncateText(wikiService.description$ | async, 1000) }}</p>
+    }
+    <button (click)="isExpanded = !isExpanded">{{ isExpanded ? 'Read Less' : 'Read More' }}</button>
+</div>
+
+

@@ -1,0 +1,28 @@
+<div class="shadow">
+    @if (f1Service.races$|async; as races) {
+        @if (races[f1Service.raceSelectedIndex - 1]; as race) {
+            <h5>Results: {{ race.season }} {{ race.raceName }}</h5>
+        }
+    }
+</div>
+
+<div class="result-form shadow">
+
+    <label><b>Position</b></label>
+    <label><b>Nation</b></label>
+    <label><b>First name</b></label>
+    <label><b>Last name</b></label>
+    <label><b>Finish Time</b></label>
+    <label><b>Points earned</b></label>
+
+
+    @for (result of f1Service.results$ | async; track result) {
+        <label>{{ result.position }}</label>
+        <img src="https://flagsapi.com/{{countryService.getCountryCode(result.Driver.nationality)}}/flat/16.png"
+             alt="flag">
+        <label>{{ result.Driver.givenName }}</label>
+        <label>{{ result.Driver.familyName }}</label>
+        <label>{{ result.Time ? result.Time.time : 'DNF' }}</label>
+        <label>{{ result.points }}</label>
+    }
+</div>

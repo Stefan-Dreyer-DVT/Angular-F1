@@ -5,7 +5,6 @@ import {Injectable} from '@angular/core';
 })
 export class CountryService {
 
-    // ISO 3166 Alpha-2 Format: [Country Name] : [2 letter Country Code]
     getCountryCode(country: string): string {
         return this.countryList[country];
     }

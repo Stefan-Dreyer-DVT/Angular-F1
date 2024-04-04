@@ -4,13 +4,6 @@ div {
   align-items: center;
   gap: 1rem;
 
-  .shadow {
-    padding: 4px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    width: 100%;
-  }
-
   .poll {
 
 
@@ -47,18 +40,5 @@ div {
         height: 2rem;
       }
     }
-  }
-
-  div {
-    h5 {
-      font-size: 100%;
-    }
-  }
-
-  .result-form {
-
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 1em;
   }
 }
