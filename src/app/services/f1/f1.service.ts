@@ -4,6 +4,8 @@ import {F1RaceService} from './f1-race.service';
 import {F1ResultService} from './f1-result.service';
 
 
+export const timeoutDelay = 500;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -30,6 +32,4 @@ export class F1Service {
                 private f1Result: F1ResultService) {
         f1Season.fetchSeasons();
     }
-
-
 }
