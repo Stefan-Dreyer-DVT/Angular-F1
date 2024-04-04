@@ -29,7 +29,6 @@ export class WikiImageService {
                     if (response.query.pages.hasOwnProperty(key)) {
                         const imageUrl = response.query.pages[key].thumbnail?.source;
                         if (imageUrl) {
-                            console.log(imageUrl)
                             this.image$.next(imageUrl);
                         }
                     }

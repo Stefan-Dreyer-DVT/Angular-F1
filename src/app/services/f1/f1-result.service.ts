@@ -65,7 +65,7 @@ export class F1ResultService {
                 timeout(timeoutDelay),
                 take(1),
                 catchError(err => {
-                    console.log(err)
+                    console.error(err)
 
                     return of(this.demoResponse)
                 })
