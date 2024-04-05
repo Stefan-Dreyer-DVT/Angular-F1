@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {apiResponse, Season} from '../../models/f1-model';
-import {catchError, of, retry, Subject, take, timeout} from 'rxjs';
+import {apiResponse} from '../../models/f1-model';
+import {catchError, map, of, retry, timeout} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {timeoutDelay} from './f1.service';
 
@@ -9,8 +9,26 @@ import {timeoutDelay} from './f1.service';
 })
 export class F1SeasonService {
 
+    fetchSeasons() {
+        return this.http.get<apiResponse>('https://ergast.com/api/f1/seasons.json?limit=100')
+            .pipe(
+                retry(2),
+                timeout(timeoutDelay),
+                catchError(err => {
+                    console.error(err);
 
-    seasons$ = new Subject<Season[]>();
+                    return of(this.demoResponse);
+
+                }),
+                map(response => {
+                    if (response.MRData.SeasonTable) {
+                        return response.MRData.SeasonTable.Seasons
+                    }
+                    return [];
+                })
+            );
+
+    }
 
     private demoResponse = {
         MRData: {
@@ -28,31 +46,6 @@ export class F1SeasonService {
             }
         }
     } as apiResponse;
-
-    fetchSeasons() {
-        this.http.get<apiResponse>('https://ergast.com/api/f1/seasons.json?limit=100')
-            .pipe(
-                retry(2),
-                timeout(timeoutDelay),
-                take(1),
-                catchError(err => {
-                    console.error(err);
-
-                    return of(this.demoResponse);
-
-                })
-            )
-            .subscribe(response => {
-                const seasons = response.MRData.SeasonTable?.Seasons;
-                if (seasons) {
-                    this.seasons$.next(seasons);
-                } else {
-                    console.error('UpdateSeasons DID NOT HAVE SeasonTable...')
-                }
-            })
-
-        return this.seasons$;
-    }
 
     constructor(private http: HttpClient) {
     }

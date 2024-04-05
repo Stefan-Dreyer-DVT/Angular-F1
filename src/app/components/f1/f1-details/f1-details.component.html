@@ -1,17 +1,21 @@
 <div>
-    @if (f1Service.results$|async; as results) {
-        @if (results.length > 0) {
-            <img [src]="wikiService.image$ | async" alt="">
-            <a [href]="(results[0].Driver.url)">Wiki page link</a>
+    @if (results$|async) {
+        @if (image$|async; as image) {
+            <img src='{{image}}' alt="">
+        } @else {
+            <h4>Loading image</h4>
+        }
+        @if (desc$ | async; as desc) {
+            @if (isExpanded) {
+                <p>{{ desc}}</p>
+            } @else {
+                <p>{{ truncateText(desc, 1000) }}</p>
+            }
+            <button (click)="isExpanded = !isExpanded">{{ isExpanded ? 'View Less' : 'Read More' }}</button>
+        } @else {
+            <h4>Loading description</h4>
         }
     }
-    @if (isExpanded) {
-
-        <p>{{ wikiService.description$ | async }}</p>
-    } @else {
-        <p>{{ truncateText(wikiService.description$ | async, 1000) }}</p>
-    }
-    <button (click)="isExpanded = !isExpanded">{{ isExpanded ? 'Read Less' : 'Read More' }}</button>
 </div>
 
 

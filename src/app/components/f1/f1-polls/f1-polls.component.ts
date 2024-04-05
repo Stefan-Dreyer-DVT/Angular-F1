@@ -1,7 +1,6 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {AsyncPipe, NgIf} from '@angular/common';
 import {F1Service} from '../../../services/f1/f1.service';
-import {CountryService} from '../../../services/country.service';
 
 @Component({
   selector: 'app-f1-polls',
@@ -15,7 +14,7 @@ import {CountryService} from '../../../services/country.service';
 })
 export class F1PollsComponent {
 
-  f1Service = inject(F1Service);
-  countryService = inject(CountryService);
-
+  results$ = this.f1Service.results$;
+  constructor(private f1Service: F1Service) {
+  }
 }

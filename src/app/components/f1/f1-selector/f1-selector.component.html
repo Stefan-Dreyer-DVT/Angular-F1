@@ -1,20 +1,19 @@
 <div class="selector-form">
 
     <div>
-        <label>Season:</label>
-        <select [(ngModel)]="selectedSeason" (change)="f1Service.selectSeason(selectedSeason)">
-            @for (season of f1Service.seasons$|async; track season) {
+        <label>Season: </label>
+        <select [(ngModel)]="selectedSeason" (change)="selectSeason(selectedSeason)">
+            @for (season of seasons$|async; track season) {
                 <option value="{{season.season}}">{{ season.season }}</option>
             }
         </select>
     </div>
 
     <div>
-
         <label>Race:</label>
-        @if(selectedSeason){
-            <select [(ngModel)]="selectedRace" (change)="f1Service.selectRace(selectedSeason,selectedRace)">
-                @for (race of f1Service.races$|async; track race.round) {
+        @if (selectedSeason) {
+            <select [(ngModel)]="selectedRace" (change)="selectRace(selectedRace)">
+                @for (race of (races$|async); track race) {
                     <option value="{{race.round}}">{{ race.raceName }}</option>
                 }
             </select>

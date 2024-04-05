@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+  font-family: "Comic Sans MS",sans-serif;
+}
+
+.shadow {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  background-color: #e0e0e0;
+}

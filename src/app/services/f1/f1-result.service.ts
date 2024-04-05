@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {apiResponse, Result} from '../../models/f1-model';
-import {catchError, of, retry, Subject, take, timeout} from 'rxjs';
+import {catchError, map, of, retry, Subject, switchMap, timeout} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {timeoutDelay} from './f1.service';
 
@@ -9,8 +9,24 @@ import {timeoutDelay} from './f1.service';
 })
 export class F1ResultService {
 
-    results$ = new Subject<Result[]>();
-    // results: Result[] = [];
+    fetchResults(season: string, round: number) {
+        return this.http.get<apiResponse>(`https://ergast.com/api/f1/${season}/${round}/results.json`)
+            .pipe(
+                retry(2),
+                timeout(timeoutDelay),
+                catchError(err => {
+                    console.error(err)
+
+                    return of(this.demoResponse)
+                }),
+                map(response => {
+                    if (response.MRData?.RaceTable?.Races[0].Results) {
+                        return response.MRData.RaceTable.Races[0].Results
+                    }
+                    return [] as Result[]
+                })
+            )
+    }
 
     private demoResponse = {
         MRData: {
@@ -57,34 +73,6 @@ export class F1ResultService {
             }
         }
     } as apiResponse
-
-    fetchResults(season: string, round: number) {
-        this.http.get<apiResponse>(`https://ergast.com/api/f1/${season}/${round}/results.json`)
-            .pipe(
-                retry(2),
-                timeout(timeoutDelay),
-                take(1),
-                catchError(err => {
-                    console.error(err)
-
-                    return of(this.demoResponse)
-                })
-            )
-            .subscribe(response => {
-                if (response.MRData.RaceTable) {
-                    const raceResult = response.MRData.RaceTable.Races[0]?.Results;
-                    if (raceResult) {
-                        this.results$.next(raceResult);
-                        // this.results = raceResult;
-                    } else {
-                        console.error('Specific Race index did not exist');
-                    }
-                } else {
-                    console.error('Response did not have a RaceTable');
-                }
-            })
-        return this.results$;
-    }
 
     constructor(private http: HttpClient) {
     }

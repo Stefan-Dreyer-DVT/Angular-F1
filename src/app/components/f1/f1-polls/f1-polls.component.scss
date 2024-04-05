@@ -1,11 +1,12 @@
-div {
+.container {
+  padding: 1rem;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 
   .poll {
-
 
     display: flex;
     flex-direction: row;

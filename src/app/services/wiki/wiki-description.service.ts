@@ -1,42 +1,38 @@
 import {Injectable} from '@angular/core';
-import {catchError, of, retry, Subject, take} from 'rxjs';
+import {catchError, map, of, retry, switchMap, take} from 'rxjs';
 import {WikiResponse} from '../../models/wiki-model';
-import {corsAnywhereUrl, WikiService} from './wiki.service';
+import {corsAnywhereUrl} from './wiki.service';
 import {HttpClient} from '@angular/common/http';
+import {F1Service} from '../f1/f1.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WikiDescriptionService {
 
-
-    description$ = new Subject<string>();
-
-    private demoResponse ={
-    } as WikiResponse
-
     fetchDescription(title: string) {
-        this.http.get<WikiResponse>(`${corsAnywhereUrl}https://en.wikipedia.org/w/api.php?action=query&titles=${title}&prop=extracts&exintro&explaintext&format=json`)
+        return this.http.get<WikiResponse>(`${corsAnywhereUrl}https://en.wikipedia.org/w/api.php?action=query&titles=${title}&prop=extracts&exintro&explaintext&format=json`)
             .pipe(
                 retry(2),
-                take(1),
                 catchError(err => {
                     return of(this.demoResponse)
-                })
-            )
-            .subscribe(response => {
-                for (const key in response.query.pages) {
-                    if (response.query.pages.hasOwnProperty(key)) {
-                        const extract = response.query.pages[key].extract;
-                        if (extract) {
-                            this.description$.next(extract);
+                }),
+                map(response => {
+                    for (const key in response.query.pages) {
+                        if (response.query.pages.hasOwnProperty(key)) {
+                            const extract = response.query.pages[key].extract;
+                            if (extract) {
+                                return extract;
+                            }
                         }
                     }
-                }
-            })
-        return this.description$
+                    return '';
+                })
+            )
     }
 
-    constructor(private http: HttpClient) {
+    private demoResponse ={} as WikiResponse
+
+    constructor(private http: HttpClient, private f1Service: F1Service) {
     }
 }

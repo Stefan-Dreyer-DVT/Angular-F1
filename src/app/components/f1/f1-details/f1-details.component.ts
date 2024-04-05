@@ -14,8 +14,12 @@ import {F1Service} from '../../../services/f1/f1.service';
 })
 export class F1DetailsComponent {
 
-    fullText: string = ''; // Full text from API
-    truncatedText: string = ''; // Truncated text to display
+
+    image$ = this.wikiService.image$;
+    desc$ = this.wikiService.description$;
+    results$ = this.f1Service.results$;
+
+
     isExpanded: boolean = false; // Flag to track whether full text is displayed
 
     truncateText(text: string | null, maxLength: number): string {
@@ -28,9 +32,8 @@ export class F1DetailsComponent {
         return text.substring(0, maxLength) + '...';
     }
 
-    constructor(public wikiService: WikiService, protected f1Service: F1Service) {
-        this.fullText = '...'; // Assign the full text here
-        this.truncatedText = this.truncateText(this.fullText, 200); // Truncate text to 200 characters
+    constructor(private wikiService: WikiService,
+                private f1Service: F1Service) {
     }
 
 }

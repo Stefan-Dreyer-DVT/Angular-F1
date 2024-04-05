@@ -1,6 +1,17 @@
-.result-form {
-
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 1em;
+.title {
+  text-align: center;
+  font-size: 200%;
 }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 1rem 0.5rem;
+
+  tr {
+    th {
+      text-align: left;
+    }
+  }
+}
+

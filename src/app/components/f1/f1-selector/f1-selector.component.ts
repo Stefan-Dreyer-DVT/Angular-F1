@@ -19,8 +19,18 @@ export class F1SelectorComponent {
     selectedSeason = '';
     selectedRace = 0;
 
-
-    constructor(protected f1Service: F1Service) {
+    seasons$ = this.f1Service.seasons$
+    races$ = this.f1Service.races$
+    selectSeason(season : string){
+        this.f1Service.selectSeason(season);
     }
+
+    selectRace(race : number){
+        this.f1Service.selectRace(race);
+    }
+
+    constructor(private f1Service: F1Service) {
+    }
+
 
 }

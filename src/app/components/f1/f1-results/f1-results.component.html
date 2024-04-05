@@ -1,28 +1,79 @@
-<div class="shadow">
-    @if (f1Service.races$|async; as races) {
-        @if (races[f1Service.raceSelectedIndex - 1]; as race) {
-            <h5>Results: {{ race.season }} {{ race.raceName }}</h5>
+<div class="title shadow">
+    @if (races$|async; as races) {
+        @if (selectedRace$|async; as raceIndex) {
+            @if (races[raceIndex - 1]; as race) {
+                <h5>Results: {{ race.season }} {{ race.raceName }}</h5>
+            }
         }
     }
 </div>
 
-<div class="result-form shadow">
+<table class="shadow">
+    @if (selectedRace$ | async) {
 
-    <label><b>Position</b></label>
-    <label><b>Nation</b></label>
-    <label><b>First name</b></label>
-    <label><b>Last name</b></label>
-    <label><b>Finish Time</b></label>
-    <label><b>Points earned</b></label>
+        <tr>
+            <th><b>Position</b></th>
+            <th><b>Nation</b></th>
+            <th><b>First name</b></th>
+            <th><b>Last name</b></th>
+            <th><b>Finish Time</b></th>
+            <th><b>Points earned</b></th>
+
+        </tr>
+        @if (results$ | async; as results) {
+
+            @for (result of results; track result) {
+                <tr>
+                    <td>{{ result.position }}</td>
+                    <td><img src="https://flagsapi.com/{{countryList[result.Driver.nationality]}}/flat/16.png"
+                         alt="flag"></td>
+                    <td>{{ result.Driver.givenName }}</td>
+                    <td>{{ result.Driver.familyName }}</td>
+                    <td>{{ result.Time ? result.Time.time : 'DNF' }}</td>
+                    <td>{{ result.points }}</td>
+                </tr>
+
+            }
+        } @else {
+            <tr>
+
+                <td>LOADING!</td>
+                <td>LOADING!</td>
+                <td>LOADING!</td>
+                <td>LOADING!</td>
+                <td>LOADING!</td>
+                <td>LOADING!</td>
+            </tr>
+
+        }
 
 
-    @for (result of f1Service.results$ | async; track result) {
-        <label>{{ result.position }}</label>
-        <img src="https://flagsapi.com/{{countryService.getCountryCode(result.Driver.nationality)}}/flat/16.png"
-             alt="flag">
-        <label>{{ result.Driver.givenName }}</label>
-        <label>{{ result.Driver.familyName }}</label>
-        <label>{{ result.Time ? result.Time.time : 'DNF' }}</label>
-        <label>{{ result.points }}</label>
+        <!--        <label><b>Position</b></label>-->
+                <!--        <label><b>Nation</b></label>-->
+                <!--        <label><b>First name</b></label>-->
+                <!--        <label><b>Last name</b></label>-->
+                <!--        <label><b>Finish Time</b></label>-->
+                <!--        <label><b>Points earned</b></label>-->
+
+                <!--        @if (results$ | async; as results) {-->
+
+                <!--            @for (result of results; track result) {-->
+
+                <!--                <label>{{ result.position }}</label>-->
+                <!--                <img src="https://flagsapi.com/{{countryList[result.Driver.nationality]}}/flat/16.png"-->
+                <!--                     alt="flag">-->
+                <!--                <label>{{ result.Driver.givenName }}</label>-->
+                <!--                <label>{{ result.Driver.familyName }}</label>-->
+                <!--                <label>{{ result.Time ? result.Time.time : 'DNF' }}</label>-->
+                <!--                <label>{{ result.points }}</label>-->
+                <!--            }-->
+                <!--        } @else {-->
+                <!--            <label>LOADING!</label>-->
+                <!--            <label>LOADING!</label>-->
+                <!--            <label>LOADING!</label>-->
+                <!--            <label>LOADING!</label>-->
+                <!--            <label>LOADING!</label>-->
+                <!--            <label>LOADING!</label>-->
+                <!--        }-->
     }
-</div>
+</table>

@@ -5,11 +5,7 @@ import {Injectable} from '@angular/core';
 })
 export class CountryService {
 
-    getCountryCode(country: string): string {
-        return this.countryList[country];
-    }
-
-    private countryList: { [key: string]: string } = {
+    countryList: { [key: string]: string } = {
         American: 'US',
         Argentine: 'AR',
         Australian: 'AU',

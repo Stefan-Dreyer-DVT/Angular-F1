@@ -14,8 +14,13 @@ import {CountryService} from '../../../services/country.service';
 })
 export class F1ResultsComponent {
 
-  constructor(protected f1Service : F1Service,
-              protected countryService : CountryService) {
+  races$ = this.f1Service.races$;
+  selectedRace$ = this.f1Service.selectedRace$;
+  results$ = this.f1Service.results$;
+
+  countryList = this.countryService.countryList;
+  constructor(private f1Service : F1Service,
+              private countryService : CountryService) {
   }
 
 }
